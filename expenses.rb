@@ -4,17 +4,18 @@
 #   Month/Year: <month/year of claim> [default value: current month and year]
 #   Comment: <comment> [default value: '']
 #   Receipts: <path to pdf of receipts> [default value: don't add receipts]
+#   Project: <subproject code to override default>
 #
 # Expense item rows are of the three possible formats
 #
 #   <type>; <date>; <cur> <amount>; <desc>
-#   <type>; <date>; <cur> <amount>; <sub-project>; <desc>
+#   <type>; <date>; <cur> <amount>; <account>; <desc>
 #   <type>; <date>; <cur> <amount>; <account>; <sub-project>; <desc>
 #
 # E.g.
 #
 #   plane; 12 Oct; GBP 100; Item 1: My flight to Singapore
-#   plane; 12 Oct; GBP 100; R10101-01; Item 1: My flight to Singapore
+#   plane; 12 Oct; GBP 100; 6050; Item 1: My flight to Singapore
 #   plane; 12 Oct; GBP 100; 6050; R10101-01; Item 1: My flight to Singapore
 #
 # <cur> is given as a 3-char currency code followed by the value.  For mileage,
@@ -123,6 +124,7 @@ class Expenses
             [/^Month\/Year:\s*(.*)$/, lambda { |m| @month_year = m[1] }],
             [/^Comment:\s*(.*)$/, lambda { |m| @comment = m[1] }],
             [/^Receipts:\s*(.*)$/, lambda { |m| @receipts = m[1] }],
+            [/^Project:\s*(.*)$/, lambda { |m| default_subproject = m[1] }],
             [/^(\w+);\s*([^;]+);\s*(\w{3})\s+([\d.]+);\s([^;]*)$/,
              lambda { |m|
                 @items << ExpenseItem.new(m[1], m[2], m[3], m[4], m[5].chomp,

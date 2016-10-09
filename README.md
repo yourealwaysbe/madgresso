@@ -67,17 +67,18 @@ General details are
     Month/Year: <month/year of claim> [default value: current month and year]
     Comment: <comment> [default value: '']
     Receipts: <path to pdf of receipt scans> [default value: don't add receipts]
+    Project: <subproject code to override configured default>
 
 Expense item rows are of the three possible formats
 
     <type>; <date>; <cur> <amount>; <desc>
-    <type>; <date>; <cur> <amount>; <sub-project>; <desc>
+    <type>; <date>; <cur> <amount>; <account>; <desc>
     <type>; <date>; <cur> <amount>; <account>; <sub-project>; <desc>
 
 E.g.
 
     plane; 12 Oct; GBP 100; Item 1: My flight to Singapore
-    plane; 12 Oct; GBP 100; R10101-01; Item 1: My flight to Singapore
+    plane; 12 Oct; GBP 100; 6050; Item 1: My flight to Singapore
     plane; 12 Oct; GBP 100; 6050; R10101-01; Item 1: My flight to Singapore
 
 `<cur>` is given as a 3-char currency code followed by the value.  For mileage,
@@ -89,13 +90,14 @@ The `<account>` is the account code (e.g. 6050 for staff travel).  The default
 value is defined in the configuration file.
 
 The `<subproject>` is the subproject code (e.g. R10101-01).  The default is
-defined in the configuration file.
+defined in the configuration file if not overriden by a `Project:` line.
 
 The `<date>` can be given in any format ruby is happy with.  Missing values are
 filled in with the current value.  E.g. '12 Oct' is read as '12 Oct 2016' (if
 the program is being run on e.g. 25 Nov 2016).
 
-Valid `<type>`s are defined in EXPENSE_TYPES configuration.rb
+Valid `<type>`s are defined in `EXPENSE_TYPES`
+[configuration.rb](configuration.rb).
 
 Rows starting with '#' are ignored.
 
