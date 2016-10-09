@@ -127,14 +127,8 @@ class Expenses
                 [/^#.*/, lambda { |m| }],
                 [/^Month\/Year:\s*(.*)$/i, lambda { |m| @month_year = m[1] }],
                 [/^Comment:\s*(.*)$/i, lambda { |m| @comment = m[1] }],
-                [/^Receipts:\s*(.*)$/i, lambda { |m|
-                    @receipts << m[1]
-                    puts "Added receipt file #{m[1]}"
-                 }],
-                [/^Project:\s*(.*)$/i, lambda { |m|
-                    default_subproject = m[1]
-                    puts "Set default project #{m[1]}"
-                 }],
+                [/^Receipts:\s*(.*)$/i, lambda { |m| @receipts << m[1] }],
+                [/^Project:\s*(.*)$/i, lambda { |m| default_subproject = m[1] }],
                 [/^(\w+);\s*([^;]+);\s*(\w{3})\s+([\d.]+);\s([^;]*)$/,
                  lambda { |m|
                     items << ExpenseItem.new(m[1], m[2], m[3], m[4], m[5].chomp,
