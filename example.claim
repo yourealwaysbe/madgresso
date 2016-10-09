@@ -1,0 +1,11 @@
+# Here is an example claim file
+
+Month/Year: Uctober 2016
+Comment: Wowzers
+Receipts: /home/matt/test/receipts.pdf
+
+bike; 19 Aug; MIL 13; Item 8: Cycle to Paddington
+reg; 19 Aug; EUR 600; Item 9: Registration for conference
+plane; 12 Oct; GBP 100; Item 3: Flight to London
+hotel; 3 Oct; EUR 80; Item 5: Hotel for living
+food; 8 Oct; USD 15.30; 6090; Item 8: Burger for lunch
