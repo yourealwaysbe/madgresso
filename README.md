@@ -3,6 +3,8 @@
 A Capybara-based script for automatically filling in Agresso expense claims, at
 least for the installation i have to deal with...
 
+Can either be done via expense claim files or interactively on the command line.
+
 ## Requirements
 
 * [Capybara 2.10.1](https://rubygems.org/gems/capybara)
@@ -69,6 +71,9 @@ General details are
     Receipts: <path to pdf of receipt scans> [default value: don't add receipts]
     Project: <subproject code to override configured default>
 
+Multiple receipts can be specified.  Setting the project applies to all future
+claim items, so you can change it mid-file.
+
 Expense item rows are of the three possible formats
 
     <type>; <date>; <cur> <amount>; <desc>
@@ -102,6 +107,24 @@ Valid `<type>`s are defined in `EXPENSE_TYPES` in
 [configuration.rb](configuration.rb).
 
 Rows starting with '#' are ignored.
+
+
+### Interactive Mode
+
+Instead of writing a file and processing it, you can run madgresso interatively.
+In this case, you supply the month/year and comment on the command line, if the
+default values (current month/year, and '') are not sufficient.
+
+    madgresso.rb -i [-m <month/year>] [-r <comment>]
+
+Then, items are added just like the files
+
+    plane; 10 oct; eur 100; item 1: flight to London
+    receipts: ~/myreceipts.pdf
+
+The receipts file can be tab-completed.
+
+To finish, use ctrl-D.
 
 
 ### Submitting a Claim

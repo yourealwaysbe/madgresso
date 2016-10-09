@@ -5,6 +5,7 @@ require 'capybara'
 require 'selenium-webdriver'
 
 require_relative 'expenses'
+require_relative 'interactive'
 
 HOME_CONFIG = '~/.config/madgresso/configuration.rb'
 
@@ -12,6 +13,9 @@ HOME_CONFIG = '~/.config/madgresso/configuration.rb'
 # Parse the options, set up the environment
 
 config_loaded = false
+interactive = false
+month_year = Time.now.strftime('%B %Y')
+comment = ''
 
 opt_parser = OptionParser.new do |opts|
     opts.banner = 'Usage madgresso.rb [options] <info file>'
@@ -24,10 +28,26 @@ opt_parser = OptionParser.new do |opts|
         require File.expand_path(conf)
         config_loaded = true
     end
+    opts.on('-i', '--interactive',
+            'Run in interactive mode where input file',
+            'is read from stdin (ctrl-D to terminate)') do
+        interactive = true
+    end
+    opts.on('-m', '--month-year MONTH_YEAR',
+            'Specify month/year field in interactive mode',
+            'else current time will be used') do |my|
+        month_year = my
+    end
+    opts.on('-r', '--comment',
+            'Specify comment field in interactive mode',
+            'else will be empty') do |cmt|
+        comment = cmt
+    end
+
 end
 opt_parser.parse!(ARGV)
 
-if ARGV.empty?
+if not interactive and ARGV.empty?
     puts opt_parser
     exit -1
 end
@@ -41,7 +61,12 @@ if not config_loaded
     end
 end
 
-claim = Expenses.new(File.expand_path(ARGV[0]),
+input_stream = interactive ? Interactive.new
+                           : File.open(File.expand_path(ARGV[0]), 'r')
+
+claim = Expenses.new(input_stream,
+                     month_year,
+                     comment,
                      DEFAULT_ACCOUNT,
                      DEFAULT_SUBPROJ)
 
@@ -104,6 +129,12 @@ end
 wb.within_frame wb.find('#containerFrame') do
     wb.within_frame wb.find('#contentContainerFrame') do
         claim.items.each do |item|
+            # Check if ok
+            if EXPENSE_TYPES[item.type].nil?
+                puts "#{item.type} not recognised, ignoring item."
+                next
+            end
+
             # First click add
             wb.find('.TitleCell', :text => 'Add').click
 
@@ -140,7 +171,7 @@ wb.within_frame wb.find('#containerFrame') do
         end
 
         # Get window for adding documents
-        if not claim.receipts.nil?
+        if not claim.receipts.empty?
             $doc_win = wb.window_opened_by do
                 wb.find('.RibbonButtonTitle', :text => 'Documents').click
             end
@@ -148,12 +179,15 @@ wb.within_frame wb.find('#containerFrame') do
     end
 end
 
-if not claim.receipts.nil?
+if not claim.receipts.empty?
     wb.within_window $doc_win do
         wb.within_frame wb.find('#contentContainerFrame') do
-            wb.find('.TitleCell', :text => 'Add existing document').click
-            wb.find('input[type=file]').set(claim.receipts)
-            wb.find('.TitleCell', :text => 'OK').click
+            claim.receipts.each do |receipt|
+                fullpath = File.expand_path(receipt)
+                wb.find('.TitleCell', :text => 'Add existing document').click
+                wb.find('input[type=file]').set(fullpath)
+                wb.find('.TitleCell', :text => 'OK').click
+            end
         end
     end
     $doc_win.close

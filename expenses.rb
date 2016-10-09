@@ -108,59 +108,69 @@ class Expenses
 
     # Reads new expenses object from file name
     # Params:
-    #  +filename+:: string, the path to the file
+    #  +input_stream+:: a stream of input characters, e.g. and open file or
+    #                   $stdin
+    #  +default_month_year+:: string, the default month/year field value
+    #  +default_comment+:: string, the default comment field value
     #  +default_account+:: string, the default account code from configuration
     #  +default_subproject+:: string, the default subproject from configuration
-    def initialize(filename,
+    def initialize(input_stream,
+                   default_month_year,
+                   default_comment,
                    default_account,
                    default_subproject)
-        @month_year = Time.now.strftime('%B %Y')
-        @comment = ''
-        @receipts = nil
-        @items = []
+        @month_year = default_month_year
+        @comment = default_comment
+        @receipts = []
+        @items = Enumerator.new do |items|
+            @field_matcher = [
+                [/^#.*/, lambda { |m| }],
+                [/^Month\/Year:\s*(.*)$/i, lambda { |m| @month_year = m[1] }],
+                [/^Comment:\s*(.*)$/i, lambda { |m| @comment = m[1] }],
+                [/^Receipts:\s*(.*)$/i, lambda { |m|
+                    @receipts << m[1]
+                    puts "Added receipt file #{m[1]}"
+                 }],
+                [/^Project:\s*(.*)$/i, lambda { |m|
+                    default_subproject = m[1]
+                    puts "Set default project #{m[1]}"
+                 }],
+                [/^(\w+);\s*([^;]+);\s*(\w{3})\s+([\d.]+);\s([^;]*)$/,
+                 lambda { |m|
+                    items << ExpenseItem.new(m[1], m[2], m[3], m[4], m[5].chomp,
+                                             default_account,
+                                             default_subproject)
+                 }],
+                [/^(\w+);\s*([^;]+);\s*(\w{3})\s+([\d.]+);\s*(\d{4});\s*([^;]*)$/,
+                 lambda { |m|
+                    items << ExpenseItem.new(m[1], m[2], m[3], m[4], m[6].chomp,
+                                             m[5], default_subproject)
+                 }],
+                [/^(\w+);\s*([^;]+);\s*(\w{3})\s+([\d.]+);\s*(\d{4});\s*([\w-]+);\s*([^;]*)$/,
+                 lambda { |m|
+                    items << ExpenseItem.new(m[1], m[2], m[3], m[4], m[7].chomp,
+                                             m[5], m[6])
+                 }]
+            ]
 
-        @field_matcher = [
-            [/^#.*/, lambda { |m| }],
-            [/^Month\/Year:\s*(.*)$/, lambda { |m| @month_year = m[1] }],
-            [/^Comment:\s*(.*)$/, lambda { |m| @comment = m[1] }],
-            [/^Receipts:\s*(.*)$/, lambda { |m| @receipts = m[1] }],
-            [/^Project:\s*(.*)$/, lambda { |m| default_subproject = m[1] }],
-            [/^(\w+);\s*([^;]+);\s*(\w{3})\s+([\d.]+);\s([^;]*)$/,
-             lambda { |m|
-                @items << ExpenseItem.new(m[1], m[2], m[3], m[4], m[5].chomp,
-                                          default_account,
-                                          default_subproject)
-             }],
-            [/^(\w+);\s*([^;]+);\s*(\w{3})\s+([\d.]+);\s*(\d{4});\s*([^;]*)$/,
-             lambda { |m|
-                @items << ExpenseItem.new(m[1], m[2], m[3], m[4], m[6].chomp,
-                                          m[5], default_subproject)
-             }],
-            [/^(\w+);\s*([^;]+);\s*(\w{3})\s+([\d.]+);\s*(\d{4});\s*([\w-]+);\s*([^;]*)$/,
-             lambda { |m|
-                @items << ExpenseItem.new(m[1], m[2], m[3], m[4], m[7].chomp,
-                                          m[5], m[6])
-             }]
-        ]
-
-        expenses_file = File.open(filename, 'r')
-        expenses_file.each_line do |line|
-            if line.chomp.strip.length == 0
-                next
-            end
-
-            matched = false
-            @field_matcher.each do |re, handler|
-                m = re.match(line)
-                if not m.nil?
-                    handler.call(m)
-                    matched = true
-                    break
+            input_stream.each_line do |line|
+                if line.chomp.strip.length == 0
+                    next
                 end
-            end
 
-            if not matched
-                $stdout.puts "Ignoring line #{line}"
+                matched = false
+                @field_matcher.each do |re, handler|
+                    m = re.match(line)
+                    if not m.nil?
+                        handler.call(m)
+                        matched = true
+                        break
+                    end
+                end
+
+                if not matched
+                    $stdout.puts "Ignoring line #{line}"
+                end
             end
         end
     end
