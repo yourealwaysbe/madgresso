@@ -111,7 +111,7 @@ Rows starting with '#' are ignored.
 
 ### Interactive Mode
 
-Instead of writing a file and processing it, you can run madgresso interatively.
+Instead of writing a file and processing it, you can run madgresso interactively.
 In this case, you supply the month/year and comment on the command line, if the
 default values (current month/year, and '') are not sufficient.
 
