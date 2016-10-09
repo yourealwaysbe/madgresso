@@ -119,10 +119,10 @@ wb.within_frame wb.find('#containerFrame') do
             wb.fill_in('Description', :with => ' ')
             wb.fill_in('Description', :with => item.description)
 
-            if item.currency == MILEAGE_CODE
+            if item.currency.upcase == MILEAGE_CODE
                 wb.fill_in('Miles', :with => item.amount)
             else
-                wb.fill_in('Currency', :with => item.currency)
+                wb.fill_in('Currency', :with => item.currency.upcase)
                 wb.fill_in('Curr. amount', :with => ' ')
                 wb.fill_in('Curr. amount', :with => item.amount)
             end
