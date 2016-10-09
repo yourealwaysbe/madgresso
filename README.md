@@ -97,7 +97,7 @@ The `<date>` can be given in any format ruby is happy with.  Missing values are
 filled in with the current value.  E.g. '12 Oct' is read as '12 Oct 2016' (if
 the program is being run on e.g. 25 Nov 2016).
 
-Valid `<type>`s are defined in `EXPENSE_TYPES`
+Valid `<type>`s are defined in `EXPENSE_TYPES` in
 [configuration.rb](configuration.rb).
 
 Rows starting with '#' are ignored.
