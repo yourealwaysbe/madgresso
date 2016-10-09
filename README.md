@@ -122,7 +122,8 @@ Then, items are added just like the files
     plane; 10 oct; eur 100; item 1: flight to London
     receipts: ~/myreceipts.pdf
 
-The receipts file can be tab-completed.
+The receipts file can be tab-completed.  Multiple receipts files can be
+specified, but they are all added at the end, not right away.
 
 To finish, use ctrl-D.
 
