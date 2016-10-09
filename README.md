@@ -87,7 +87,8 @@ use the code MIL and the amount is the number of miles.  E.g.
     bike; 12 Oct; MIL 13; Item 1: My cycle to Paddington and back
 
 The `<account>` is the account code (e.g. 6050 for staff travel).  The default
-value is defined in the configuration file.
+value is defined in the configuration file.  (If the default is `nil` then the
+value assigned by Agresso is used.)
 
 The `<subproject>` is the subproject code (e.g. R10101-01).  The default is
 defined in the configuration file if not overriden by a `Project:` line.
