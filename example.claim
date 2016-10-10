@@ -1,7 +1,5 @@
 # Here is an example claim file
 
-Month/Year: Uctober 2016
-Comment: Wowzers
 Receipts: /home/matt/test/receipts.pdf
 
 # Only need this if we want to override the DEFAULT_SUBPROJ defined in the

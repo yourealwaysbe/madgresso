@@ -58,16 +58,17 @@ You can add as many as you find useful.
 
 Basic usage is
 
-    madgresso.rb <claim file>
+    madgresso.rb <claim file> [-m <month/year>] [-r <comment>]
 
 where `<claim file>` is a file containing the details of the expense claim.
-An example claim can be found in [example.claim](example.claim).
+The `<month/year>` and `<comment>` arguments should be provided if the default
+values are not sufficient (default is current month/year and a blank comment).
+
+An example claim file can be found in [example.claim](example.claim).
 An expense claim file contains a number of lines.
-All lines are optional (default values given in []).
+All lines are optional.
 General details are
 
-    Month/Year: <month/year of claim> [default value: current month and year]
-    Comment: <comment> [default value: '']
     Receipts: <path to pdf of receipt scans> [default value: don't add receipts]
     Project: <subproject code to override configured default>
 
@@ -128,13 +129,8 @@ specified, but they are all added at the end, not right away.
 To finish, use ctrl-D.
 
 
-### Submitting a Claim
+### Notes
 
-To make a claim, run
-
-    madgresso.rb <claim file>
-
-and watch it run.
 Try not to disturb it, because inteferring can cause expected items to
 disappear, which will cause the whole thing to crash.
 

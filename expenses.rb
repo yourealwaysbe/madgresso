@@ -1,8 +1,6 @@
 # Expense claim class, created from file of format (lines can be any order).
-# All lines are optional (default values given in []).
+# All lines are optional.
 #
-#   Month/Year: <month/year of claim> [default value: current month and year]
-#   Comment: <comment> [default value: '']
 #   Receipts: <path to pdf of receipts> [default value: don't add receipts]
 #   Project: <subproject code to override default>
 #
@@ -95,28 +93,19 @@ end
 
 # Expense read from file
 # Readable attributes
-#  +month_year+:: string, text to write in the month/year box on first page of
-#                 claim
-#  +comment+:: string, test to write in comment box on first page
 #  +receipts+:: string, path to receipts file or nil if none
 #  +items+:: array of ExpenseItems read from file
 class Expenses
-    attr_reader :month_year,
-                :comment,
-                :receipts,
+    attr_reader :receipts,
                 :items
 
     # Reads new expenses object from file name
     # Params:
     #  +input_stream+:: a stream of input characters, e.g. and open file or
     #                   $stdin
-    #  +default_month_year+:: string, the default month/year field value
-    #  +default_comment+:: string, the default comment field value
     #  +default_account+:: string, the default account code from configuration
     #  +default_subproject+:: string, the default subproject from configuration
     def initialize(input_stream,
-                   default_month_year,
-                   default_comment,
                    default_account,
                    default_subproject)
         @month_year = default_month_year
@@ -125,8 +114,6 @@ class Expenses
         @items = Enumerator.new do |items|
             @field_matcher = [
                 [/^#.*/, lambda { |m| }],
-                [/^Month\/Year:\s*(.*)$/i, lambda { |m| @month_year = m[1] }],
-                [/^Comment:\s*(.*)$/i, lambda { |m| @comment = m[1] }],
                 [/^Receipts:\s*(.*)$/i, lambda { |m| @receipts << m[1] }],
                 [/^Project:\s*(.*)$/i, lambda { |m| default_subproject = m[1] }],
                 [/^(\w+);\s*([^;]+);\s*(\w{3})\s+([\d.]+);\s([^;]*)$/,
