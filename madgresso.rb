@@ -73,7 +73,8 @@ claim = Expenses.new(input_stream,
 
 # Set up browser
 
-Capybara.default_max_wait_time = 10
+# Should be long enough to enter a password...
+Capybara.default_max_wait_time = 10000000
 Capybara.wait_on_first_by_default = true
 Capybara.register_driver :selenium do |app|
     args = []
@@ -97,7 +98,9 @@ wb.visit(AGRESSO_URL)
 
 wb.fill_in('ctl00$ctl00', :with => USERNAME)
 wb.fill_in('ctl00$ctl01', :with => 'CC')
-wb.fill_in('ctl00$ctl02', :with => PASSWORD)
+if not PASSWORD.nil?
+    wb.fill_in('ctl00$ctl02', :with => PASSWORD)
+end
 
 
 # Create new expense claim

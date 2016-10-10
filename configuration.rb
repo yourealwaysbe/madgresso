@@ -7,8 +7,9 @@ USERNAME = 'xxxx000'
 
 # Agresso password -- storing your password here in plaintext is a bad idea.
 # Retreiving your password via a password manager shell command in backticks
-# is recommended:
-PASSWORD = `/home/madgresso/.config/madgresso/getpass.sh`
+# is recommended.  When set to nil the user must enter the password manually
+#   PASSWORD = `/home/madgresso/.config/madgresso/getpass.sh`
+PASSWORD = nil
 
 # set proxy = nil for no proxy or a string accepted by --proxy-server in Chrome
 # otherwise:
