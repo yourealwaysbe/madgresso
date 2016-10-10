@@ -108,8 +108,6 @@ class Expenses
     def initialize(input_stream,
                    default_account,
                    default_subproject)
-        @month_year = default_month_year
-        @comment = default_comment
         @receipts = []
         @items = Enumerator.new do |items|
             @field_matcher = [

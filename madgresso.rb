@@ -38,7 +38,7 @@ opt_parser = OptionParser.new do |opts|
             'else current time will be used') do |my|
         month_year = my
     end
-    opts.on('-r', '--comment',
+    opts.on('-r', '--comment COMMENT',
             'Specify comment field in interactive mode',
             'else will be empty') do |cmt|
         comment = cmt
@@ -65,8 +65,6 @@ input_stream = interactive ? Interactive.new
                            : File.open(File.expand_path(ARGV[0]), 'r')
 
 claim = Expenses.new(input_stream,
-                     month_year,
-                     comment,
                      DEFAULT_ACCOUNT,
                      DEFAULT_SUBPROJ)
 
@@ -118,10 +116,10 @@ sleep 2
 
 wb.within_frame wb.find('#containerFrame') do
     wb.within_frame wb.find('#contentContainerFrame') do
-        wb.fill_in('Month/Year of Claim', :with => claim.month_year)
+        wb.fill_in('Month/Year of Claim', :with => month_year)
         # Need to fill in a dummy value first for some reason...
         wb.fill_in('Comment', :with => '')
-        wb.fill_in('Comment', :with => claim.comment)
+        wb.fill_in('Comment', :with => comment)
         wb.find('.TitleCell', :text => 'Next step').click
     end
 end
