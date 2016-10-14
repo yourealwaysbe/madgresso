@@ -17,14 +17,17 @@ Can either be done via expense claim files or interactively on the command line.
 ### Setting Up
 
 First make sure you have a working Chrome/Chromium installed.
-Then make sure you have Capybara and Selenium
-
-    gem install capybara
-    gem install selenium-webdriver
 
 Then you should be able to run
 
-    ./madgresso.rb
+    gem build madgresso.gemspec
+    gem install madgresso-0.0.1.gem
+
+Then
+    
+    madgresso
+
+should be an executable in your PATH.
 
 
 ### Configuration
@@ -58,7 +61,7 @@ You can add as many as you find useful.
 
 Basic usage is
 
-    madgresso.rb <claim file> [-m <month/year>] [-r <comment>]
+    madgresso <claim file> [-m <month/year>] [-r <comment>]
 
 where `<claim file>` is a file containing the details of the expense claim.
 The `<month/year>` and `<comment>` arguments should be provided if the default
@@ -119,7 +122,7 @@ Instead of writing a file and processing it, you can run madgresso interactively
 In this case, you supply the month/year and comment on the command line, if the
 default values (current month/year, and '') are not sufficient.
 
-    madgresso.rb -i [-m <month/year>] [-r <comment>]
+    madgresso -i [-m <month/year>] [-r <comment>]
 
 Then, items are added just like the files
 

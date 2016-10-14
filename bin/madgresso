@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+
+require 'madgresso'
+Madgresso.run(ARGV)
