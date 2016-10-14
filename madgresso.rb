@@ -43,7 +43,6 @@ opt_parser = OptionParser.new do |opts|
             'else will be empty') do |cmt|
         comment = cmt
     end
-
 end
 opt_parser.parse!(ARGV)
 
@@ -180,6 +179,9 @@ wb.within_frame wb.find('#containerFrame') do
     end
 end
 
+
+# Post-processing: update receipts, comment, month if needed
+
 if not claim.receipts.empty?
     wb.within_window $doc_win do
         wb.within_frame wb.find('#contentContainerFrame') do
@@ -192,6 +194,24 @@ if not claim.receipts.empty?
         end
     end
     $doc_win.close
+end
+
+if not (claim.comment.nil? and
+        claim.month.nil?)
+     wb.within_frame wb.find('#containerFrame') do
+        wb.within_frame wb.find('#contentContainerFrame') do
+            wb.find('.TitleCell', :text => 'Previous step').click
+            if not claim.month.nil?
+                wb.fill_in('Month/Year of Claim', :with => claim.month)
+            end
+            if not claim.comment.nil?
+                # Need to fill in a dummy value first for some reason...
+                wb.fill_in('Comment', :with => '')
+                wb.fill_in('Comment', :with => claim.comment)
+            end
+            wb.find('.TitleCell', :text => 'Next step').click
+        end
+    end
 end
 
 

@@ -3,6 +3,8 @@
 #
 #   Receipts: <path to pdf of receipts> [default value: don't add receipts]
 #   Project: <subproject code to override default>
+#   Comment: <change the comment to override the default>
+#   Month: <change the month/year field to override the default>
 #
 # Expense item rows are of the three possible formats
 #
@@ -91,13 +93,20 @@ class ExpenseItem
 end
 
 
-# Expense read from file
+# Expense read from file, items are processed as they are read, hence receipts,
+# month, and comment attributes will not be "final" until all items have been
+# read.
+#
 # Readable attributes
 #  +receipts+:: string, path to receipts file or nil if none
 #  +items+:: array of ExpenseItems read from file
+#  +month+:: latest identified value for month/year field, nil if none specified
+#  +comment+:: latest identified value for comment field, nil if none specified
 class Expenses
     attr_reader :receipts,
-                :items
+                :items,
+                :month,
+                :comment
 
     # Reads new expenses object from file name
     # Params:
@@ -108,12 +117,16 @@ class Expenses
     def initialize(input_stream,
                    default_account,
                    default_subproject)
+        @month = nil
+        @comment = nil
         @receipts = []
         @items = Enumerator.new do |items|
             @field_matcher = [
                 [/^#.*/, lambda { |m| }],
                 [/^Receipts:\s*(.*)$/i, lambda { |m| @receipts << m[1] }],
                 [/^Project:\s*(.*)$/i, lambda { |m| default_subproject = m[1] }],
+                [/^Month:\s*(.*)$/i, lambda { |m| @month = m[1] }],
+                [/^Comment:\s*(.*)$/i, lambda { |m| @comment = m[1] }],
                 [/^(\w+);\s*([^;]+);\s*(\w{3})\s+([\d.]+);\s([^;]*)$/,
                  lambda { |m|
                     items << ExpenseItem.new(m[1], m[2], m[3], m[4], m[5].chomp,

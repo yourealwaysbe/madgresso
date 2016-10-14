@@ -71,9 +71,12 @@ General details are
 
     Receipts: <path to pdf of receipt scans> [default value: don't add receipts]
     Project: <subproject code to override configured default>
+    Comment: <change the comment to override the default>
+    Month: <change the month/year field to override the default>
 
 Multiple receipts can be specified.  Setting the project applies to all future
-claim items, so you can change it mid-file.
+claim items, so you can change it mid-file.  Comment, Month, and Receipts are
+applied after the expense claim is completed (ctrl-D or EOF).
 
 Expense item rows are of the three possible formats
 
@@ -124,7 +127,8 @@ Then, items are added just like the files
     receipts: ~/myreceipts.pdf
 
 The receipts file can be tab-completed.  Multiple receipts files can be
-specified, but they are all added at the end, not right away.
+specified, but they are all added at the end, not right away.  Similarly if
+Month or Comment is used to update these fields.
 
 To finish, use ctrl-D.
 
