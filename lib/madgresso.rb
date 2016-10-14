@@ -126,8 +126,7 @@ class Madgresso
         # Create new expense claim
 
         # wait for a long time to allow password entry
-        password_wait = 100000 if PASSWORD.nil?
-                               else Capybara.default_max_wait_time
+        password_wait = PASSWORD.nil? ? 100000 : Capybara.default_max_wait_time
 
         wb.within_frame wb.find('#_menuFrame', :wait => password_wait) do
             wb.find('.MenuModuleTitle', :text => 'Time and expenses').click
