@@ -94,8 +94,7 @@ class Madgresso
 
         # Set up browser
 
-        # Should be long enough to enter a password...
-        Capybara.default_max_wait_time = 10000000
+        Capybara.default_max_wait_time = 10
         Capybara.wait_on_first_by_default = true
         Capybara.register_driver :selenium do |app|
             args = []
@@ -126,7 +125,11 @@ class Madgresso
 
         # Create new expense claim
 
-        wb.within_frame wb.find('#_menuFrame') do
+        # wait for a long time to allow password entry
+        password_wait = 100000 if PASSWORD.nil?
+                               else Capybara.default_max_wait_time
+
+        wb.within_frame wb.find('#_menuFrame', :wait => password_wait) do
             wb.find('.MenuModuleTitle', :text => 'Time and expenses').click
             wb.find('.AppMenuItemTitle', :text => 'Expenses').click
             wb.find('#applicationMenu_ctl16_R-TT97').click
