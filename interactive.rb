@@ -4,16 +4,23 @@
 require 'readline'
 
 class Interactive
-    def initialize
+    # Param:
+    #   +save_file+:: a file to mirror all input commands to, nil
+    #   means don't mirror
+    def initialize(save_file = nil)
         @items = Queue.new
 
         puts "Please enter claim below."
 
         # Read items into queue ending with 'nil' poison
+        # Mirror items to file if requested
         Thread.new do
             Readline.completion_proc = Readline::FILENAME_COMPLETION_PROC
             while line = Readline.readline('', true)
                 @items.push line
+                if not save_file.nil?
+                    save_file.puts line
+                end
             end
             @items.push nil
         end

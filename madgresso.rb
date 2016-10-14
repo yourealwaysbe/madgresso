@@ -16,6 +16,7 @@ config_loaded = false
 interactive = false
 month_year = Time.now.strftime('%B %Y')
 comment = ''
+save_file_name = nil
 
 opt_parser = OptionParser.new do |opts|
     opts.banner = 'Usage madgresso.rb [options] <info file>'
@@ -43,6 +44,11 @@ opt_parser = OptionParser.new do |opts|
             'else will be empty') do |cmt|
         comment = cmt
     end
+    opts.on('-w', '--write FILE',
+            'If in interactive mode, save input to FILE',
+            'so it can be replayed in case of error.') do |save_file|
+        save_file_name = save_file
+    end
 end
 opt_parser.parse!(ARGV)
 
@@ -60,8 +66,20 @@ if not config_loaded
     end
 end
 
-input_stream = interactive ? Interactive.new
-                           : File.open(File.expand_path(ARGV[0]), 'r')
+
+input_stream = nil
+
+if interactive
+    save_file = nil
+    if not save_file_name.nil?
+        save_file = open(save_file_name, 'w')
+        save_file.puts("Month: #{month_year}")
+        save_file.puts("Comment: #{comment}")
+    end
+    input_stream = Interactive.new(save_file)
+else
+    input_stream = File.open(File.expand_path(ARGV[0]), 'r')
+end
 
 claim = Expenses.new(input_stream,
                      DEFAULT_ACCOUNT,

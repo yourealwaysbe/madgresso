@@ -132,6 +132,8 @@ Month or Comment is used to update these fields.
 
 To finish, use ctrl-D.
 
+To mirror your input to a file (to protect against things going wrong and having
+to type everything again), use `-w <file name>` alongside `-i`
 
 ### Notes
 
