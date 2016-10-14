@@ -10,13 +10,14 @@ require_relative 'interactive'
 HOME_CONFIG = '~/.config/madgresso/configuration.rb'
 
 
-# Parse the options, set up the environment
-
 class Madgresso
     # Runs the madgresso script on creation
     # Param
     #  +args+:: the ARGV array to process
     def self.run(args)
+
+        # Parse the options, set up the environment
+
         config_loaded = false
         interactive = false
         month_year = Time.now.strftime('%B %Y')
