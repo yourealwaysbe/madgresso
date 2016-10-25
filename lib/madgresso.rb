@@ -25,7 +25,7 @@ class Madgresso
         save_file_name = nil
 
         opt_parser = OptionParser.new do |opts|
-            opts.banner = 'Usage madgresso.rb [options] <info file>'
+            opts.banner = 'Usage madgresso.rb [options] <info file1> <info file2> ...'
 
             opts.on('-c', '--config CONFIG_FILE',
                     'Use specified config file instead of default',
@@ -36,8 +36,10 @@ class Madgresso
                 config_loaded = true
             end
             opts.on('-i', '--interactive',
-                    'Run in interactive mode where input file',
-                    'is read from stdin (ctrl-D to terminate)') do
+                    'Run in interactive mode where input is',
+                    'read from stdin (ctrl-D to terminate).',
+                    'Note: this can be used in conjunction',
+                    'with a claim file to add additional items.') do
                 interactive = true
             end
             opts.on('-m', '--month-year MONTH_YEAR',
@@ -73,7 +75,11 @@ class Madgresso
         end
 
 
-        input_stream = nil
+        input_streams = []
+
+        args.each do |filename|
+            input_streams.push  File.open(File.expand_path(filename), 'r')
+        end
 
         if interactive
             save_file = nil
@@ -82,12 +88,10 @@ class Madgresso
                 save_file.puts("Month: #{month_year}")
                 save_file.puts("Comment: #{comment}")
             end
-            input_stream = Interactive.new(save_file)
-        else
-            input_stream = File.open(File.expand_path(args[0]), 'r')
+            input_streams.push Interactive.new(save_file)
         end
 
-        claim = Expenses.new(input_stream,
+        claim = Expenses.new(input_streams,
                              DEFAULT_ACCOUNT,
                              DEFAULT_SUBPROJ)
 

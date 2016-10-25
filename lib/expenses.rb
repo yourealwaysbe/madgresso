@@ -111,15 +111,21 @@ class Expenses
     # Reads new expenses object from file name
     # Params:
     #  +input_stream+:: a stream of input characters, e.g. and open file or
-    #                   $stdin
+    #                   $stdin.  Can also be an array of input streams (read one
+    #                   after another)
     #  +default_account+:: string, the default account code from configuration
     #  +default_subproject+:: string, the default subproject from configuration
-    def initialize(input_stream,
+    def initialize(input_streams,
                    default_account,
                    default_subproject)
         @month = nil
         @comment = nil
         @receipts = []
+
+        if not input_streams.kind_of?(Array)
+            input_streams = [input_streams]
+        end
+
         @items = Enumerator.new do |items|
             @field_matcher = [
                 [/^#.*/, lambda { |m| }],
@@ -145,23 +151,25 @@ class Expenses
                  }]
             ]
 
-            input_stream.each_line do |line|
-                if line.chomp.strip.length == 0
-                    next
-                end
-
-                matched = false
-                @field_matcher.each do |re, handler|
-                    m = re.match(line)
-                    if not m.nil?
-                        handler.call(m)
-                        matched = true
-                        break
+            input_streams.each do |input_stream|
+                input_stream.each_line do |line|
+                    if line.chomp.strip.length == 0
+                        next
                     end
-                end
 
-                if not matched
-                    $stdout.puts "Ignoring line #{line}"
+                    matched = false
+                    @field_matcher.each do |re, handler|
+                        m = re.match(line)
+                        if not m.nil?
+                            handler.call(m)
+                            matched = true
+                            break
+                        end
+                    end
+
+                    if not matched
+                        $stdout.puts "Ignoring line #{line}"
+                    end
                 end
             end
         end

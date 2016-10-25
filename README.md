@@ -138,6 +138,25 @@ To finish, use ctrl-D.
 To mirror your input to a file (to protect against things going wrong and having
 to type everything again), use `-w <file name>` alongside `-i`
 
+
+### Protecting Against / Recovering From Crashes
+
+If using interactive mode it'd be hella annoying if the thing crashed after you
+just typed out 20 items.  Hence, use `-w <file name>` to mirror your typing to a
+file.  You can then run
+
+    madgresso -i <file name> -w <new file name>
+
+to replay `<file name>` before going into interactive mode again, saving any new
+input to `<new file name>`.
+
+You can replay multiple files
+
+    madgresso <file name1> <file name2>
+
+and combine it with `-i` too.
+
+
 ### Notes
 
 Try not to disturb it, because inteferring can cause expected items to
