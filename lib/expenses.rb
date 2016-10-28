@@ -130,7 +130,12 @@ class Expenses
         @items = Enumerator.new do |items|
             @field_matcher = [
                 [/^#.*/, lambda { |m| }],
-                [/^Receipts:\s*(.*)$/i, lambda { |m| @receipts << m[1] }],
+                [/^Receipts:\s*(.*)$/i, lambda { |m|
+                    Dir.glob(m[1].chomp.strip) do |filename|
+                        @receipts << filename
+                        puts "Added receipt #{filename}"
+                    end
+                }],
                 [/^Project:\s*(.*)$/i, lambda { |m| default_subproject = m[1] }],
                 [/^Month:\s*(.*)$/i, lambda { |m| @month = m[1] }],
                 [/^Comment:\s*(.*)$/i, lambda { |m| @comment = m[1] }],

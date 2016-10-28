@@ -77,9 +77,10 @@ General details are
     Comment: <change the comment to override the default>
     Month: <change the month/year field to override the default>
 
-Multiple receipts can be specified.  Setting the project applies to all future
-claim items, so you can change it mid-file.  Comment, Month, and Receipts are
-applied after the expense claim is completed (ctrl-D or EOF).
+Multiple receipts can be specified both on separate lines and by entering a glob
+(E.g. `*.pdf`).  Setting the project applies to all future claim items, so you
+can change it mid-file.  Comment, Month, and Receipts are applied after the
+expense claim is completed (ctrl-D or EOF).
 
 Expense item rows are of the three possible formats
 
