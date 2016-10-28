@@ -94,7 +94,8 @@ E.g.
     plane; 12 Oct; GBP 100; 6050; R10101-01; Item 1: My flight to Singapore
 
 `<cur>` is given as a 3-char currency code followed by the value.  Don't worry
-about upper case.  For mileage, use the code MIL and the amount is the number of
+about upper case.  If this is empty, the default currenty given by Agresso will
+be accepted.  For mileage, use the code MIL and the amount is the number of
 miles.  E.g.
 
     bike; 12 Oct; MIL 13; Item 1: My cycle to Paddington and back

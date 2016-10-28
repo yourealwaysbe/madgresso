@@ -25,8 +25,7 @@ DEFAULT_ACCOUNT = nil
 DEFAULT_SUBPROJ = 'R10101-01'
 
 # Expense types maps shortcuts to the full description given on agresso.  Some
-# examples are filled in.  Always use the "- Currency" option for non-mileage
-# items since i haven't programmed it to deal with a missing currency...
+# examples are filled in.
 EXPENSE_TYPES = {
     'reg' => 'Conference Fees - Currency',
     'hotel' => 'Hotel Room - Currency',
@@ -34,4 +33,5 @@ EXPENSE_TYPES = {
     'plane' => 'Airfares - International - Currency',
     'train' => 'Public Transport - Train - Currency',
     'bike' => 'Mileage - Bicycle rate'
+    'bus' => 'Public Transport - Other - Currency'
 }

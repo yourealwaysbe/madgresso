@@ -18,8 +18,9 @@
 #   plane; 12 Oct; GBP 100; 6050; Item 1: My flight to Singapore
 #   plane; 12 Oct; GBP 100; 6050; R10101-01; Item 1: My flight to Singapore
 #
-# <cur> is given as a 3-char currency code followed by the value.  For mileage,
-# use the code MIL and the amount is the number of miles.  E.g.
+# <cur> is given as a 3-char currency code followed by the value.  If this is
+# empty then the default currency given by Agresso will be accepted.  For
+# mileage, use the code MIL and the amount is the number of miles.  E.g.
 #
 #   bike; 12 Oct; MIL 13; Item 1: My cycle to Paddington and back
 #
@@ -133,7 +134,7 @@ class Expenses
                 [/^Project:\s*(.*)$/i, lambda { |m| default_subproject = m[1] }],
                 [/^Month:\s*(.*)$/i, lambda { |m| @month = m[1] }],
                 [/^Comment:\s*(.*)$/i, lambda { |m| @comment = m[1] }],
-                [/^(\w+);\s*([^;]+);\s*(\w{3})\s+([\d.]+);\s([^;]*)$/,
+                [/^(\w+);\s*([^;]+);\s*(\w*)\s+([\d.]+);\s([^;]*)$/,
                  lambda { |m|
                     items << ExpenseItem.new(m[1], m[2], m[3], m[4], m[5].chomp,
                                              default_account,

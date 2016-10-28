@@ -182,6 +182,15 @@ class Madgresso
 
                     if item.currency.upcase == MILEAGE_CODE
                         wb.fill_in('Miles', :with => item.amount)
+                    elsif item.currency.strip.empty?
+                        if wb.has_no_field?('Curr. amount', :wait => 0)
+                            wb.fill_in('Amount', :with => item.amount)
+                        else
+                            wb.fill_in('Curr. amount', :with => item.amount)
+                        end
+                    elsif wb.has_no_field?('Currency', :wait => 0)
+                        puts 'No currency field found, ignoring specified currency.'
+                        wb.fill_in('Amount', :with => item.amount)
                     else
                         wb.fill_in('Currency', :with => item.currency.upcase)
                         wb.fill_in('Curr. amount', :with => ' ')
