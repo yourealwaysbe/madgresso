@@ -105,8 +105,12 @@ class Madgresso
             if not PROXY.nil?
                 args << "--proxy-server=#{PROXY}"
             end
+            # Set high timeout for uploading oversized receipt files
+            client = Selenium::WebDriver::Remote::Http::Default.new
+            client.timeout = 600
             Capybara::Selenium::Driver.new(app,
                 :browser => :chrome,
+                :http_client => client,
                 :desired_capabilities => Selenium::WebDriver::Remote::Capabilities.chrome(
                     'chromeOptions' => {
                         'args' => args
