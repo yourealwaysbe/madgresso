@@ -203,7 +203,13 @@ class Madgresso
                         wb.fill_in('Subproj', :with => '')
                     end
                     wb.fill_in('Subproj', :with => item.subproject)
-                    wb.first('.slcPopup td', :text => item.subproject).click
+                    subproject_item = wb.first('.slcPopup td', :text => item.subproject)
+
+                    if subproject_item.nil?
+                        puts "Subproject not found for #{item.description}, please correct later."
+                    else
+                        subproject_item.click
+                    end
 
                     # Click something to remove focus and move on
                     wb.find('.TopLabel', :text => 'Description').click
