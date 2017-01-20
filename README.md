@@ -34,13 +34,13 @@ should be an executable in your PATH.
 
 Configuration is by writing a ruby file that defines the right constants.  An
 example (and the default configuration) can be found in
-[configuration.rb](configuration.rb).
+[configuration.rb](lib/configuration.rb).
 
 The configuration file used is either
 
 * specified on the command line with -c
 * found in ~/.config/madgresso/configuration.rb
-* the default [configuration.rb](configuration.rb) distributed with the code
+* the default [configuration.rb](lib/configuration.rb) distributed with the code
 
 You'll need to set up your Agresso URL, username, password, any proxies you'd
 like the web browser to use, and so on...
